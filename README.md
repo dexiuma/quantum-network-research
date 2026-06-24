@@ -1,10 +1,17 @@
-# PaperMiner — Website
+# Quantum Network Research — Website
 
-This repository hosts the public landing page for **PaperMiner**, a fully-local,
-multi-agent system for collecting research papers and extracting graphs, data
-points, and formulas — powered entirely by locally deployed LLMs.
+Public landing page for an integrated, fully-local **quantum-network research
+platform** that unites three components:
 
-The application source code lives in a separate (private) repository. This repo
+1. **Quantum Network Survey & Research** — the literature survey and error-type
+   taxonomy that anchors the project.
+2. **QuantumPaperMiner** — a multi-agent system for mining quantum-science papers
+   (graphs, data points, equations) and generating new data, powered by local LLMs.
+3. **Quantum Network Simulator** — a Qiskit-based simulator modelling network
+   *nodes* (calibrated from real superconducting QPUs) and *links* (photonic
+   fiber / wireless channels) with custom error models.
+
+The application source code lives in separate (private) repositories. This repo
 contains **only** the static marketing site, published via GitHub Pages.
 
 ## Contents
@@ -12,7 +19,7 @@ contains **only** the static marketing site, published via GitHub Pages.
 ```
 .
 ├── index.html                # Single-file landing page (self-contained CSS/JS)
-├── assets/architecture.png   # System architecture diagram
+├── assets/architecture.png   # QuantumPaperMiner system architecture diagram
 ├── robots.txt                # Opt out of search-engine indexing
 └── .nojekyll                 # Serve files as-is (skip Jekyll processing)
 ```
