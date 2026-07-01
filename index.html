@@ -13,6 +13,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 <style>
   :root{
     --bg:#080b16;
@@ -184,6 +187,44 @@
   .foot-col a:hover{color:var(--text)}
   .foot-bottom{margin-top:42px;padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--faint);font-size:13.5px}
 
+  /* sub-section header inside a component */
+  .subhead{display:flex;align-items:center;gap:12px;margin:56px 0 22px}
+  .subhead .lbl{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--c-sim)}
+  .subhead h3{font-size:22px;font-weight:800;letter-spacing:-.01em}
+  .subhead .ln{flex:1;height:1px;background:var(--border)}
+  .subhead p.s{color:var(--muted);font-size:14px;margin-top:2px}
+
+  /* dark figure frame (for simulator plots) */
+  .fig{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+  .fig img{width:100%;display:block;border-radius:10px}
+  .fig figcaption{color:var(--muted);font-size:13px;margin-top:12px;padding:0 4px;line-height:1.5}
+  .fig figcaption b{color:var(--text);font-weight:700}
+  .fig-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .fig-wide{margin-top:0}
+
+  /* equation cards */
+  .eq-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .eq-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px 22px;transition:border-color .25s,background .25s}
+  .eq-card:hover{border-color:var(--border-2);background:var(--panel-2)}
+  .eq-card .eq-t{font-size:14.5px;font-weight:700;margin-bottom:4px}
+  .eq-card .eq-t .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle}
+  .eq-card .eq-math{margin:14px 0 10px;overflow-x:auto;overflow-y:hidden;color:var(--text);font-size:15px}
+  .eq-card .eq-math .katex{color:#eaf0ff}
+  .eq-card .eq-d{color:var(--muted);font-size:13px;line-height:1.55}
+  .eq-card .eq-d code{color:var(--brand);font-size:12.5px;background:rgba(94,234,212,.08);padding:1px 6px;border-radius:5px}
+
+  /* calibration data table */
+  .tbl-wrap{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--panel)}
+  table.cal{width:100%;border-collapse:collapse;font-size:13.5px}
+  table.cal th,table.cal td{padding:13px 16px;text-align:right;border-bottom:1px solid var(--border)}
+  table.cal th:first-child,table.cal td:first-child{text-align:left}
+  table.cal thead th{color:var(--faint);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;background:var(--bg-soft)}
+  table.cal tbody tr:last-child td{border-bottom:none}
+  table.cal tbody tr:hover{background:var(--panel-2)}
+  table.cal td.qpu{font-weight:700;color:var(--c-sim)}
+  table.cal .mono{font-family:'JetBrains Mono',monospace;color:var(--text)}
+  table.cal caption{caption-side:bottom;color:var(--faint);font-size:12.5px;padding:12px 16px;text-align:left}
+
   .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1)}
   .reveal.in{opacity:1;transform:none}
 
@@ -195,6 +236,8 @@
     .split.rev{direction:ltr}
     .data-grid{grid-template-columns:repeat(2,1fr)}
     .repo-grid{grid-template-columns:1fr}
+    .fig-grid{grid-template-columns:1fr}
+    .eq-grid{grid-template-columns:1fr}
   }
   @media(max-width:640px){
     .nav-links{display:none}
@@ -401,6 +444,72 @@
         </div>
       </div>
     </div>
+
+    <!-- Simulator architecture -->
+    <div class="subhead reveal"><span class="lbl">Architecture</span><h3>System architecture</h3><span class="ln"></span></div>
+    <figure class="fig fig-wide reveal">
+      <img src="assets/sim_architecture.png" alt="Quantum network simulator architecture diagram" loading="lazy" />
+      <figcaption><b>Two-layer design.</b> Each <b>node</b> runs in one of three modes — local Aer, IBM-calibrated (real T₁/T₂ and gate-error snapshots), or live IBM hardware — while each <b>link</b> applies a distance-dependent photonic channel model. Protocols run over the node–link pair; results and fitted models are persisted to a SQLite store and fed back into node/channel generation.</figcaption>
+    </figure>
+
+    <!-- Error-model equations -->
+    <div class="subhead reveal"><span class="lbl">Error models</span><h3>Channel error-model equations</h3><span class="ln"></span></div>
+    <p class="lead reveal" style="margin:-8px 0 26px">Every link error is a physically-motivated quantum channel whose strength scales with distance, temperature, and hardware parameters. These are the exact models implemented in the simulator.</p>
+    <div class="eq-grid">
+      <div class="eq-card reveal">
+        <div class="eq-t"><span class="dot" style="background:var(--c-mine)"></span>Fiber attenuation &amp; amplitude damping</div>
+        <div class="eq-math">$$\eta(L)=10^{-\alpha L/10},\qquad p_\text{loss}=1-\eta\,\eta_\text{det}$$ $$\gamma_\text{eff}=\min\!\left(0.5,\ 0.3\sqrt{p_\text{loss}}\right)$$ $$K_0=\begin{pmatrix}1&0\\[2pt]0&\sqrt{1-\gamma_\text{eff}}\end{pmatrix},\ K_1=\begin{pmatrix}0&\sqrt{\gamma_\text{eff}}\\[2pt]0&0\end{pmatrix}$$</div>
+        <div class="eq-d">Photon survival through single-mode fiber, with an effective amplitude-damping channel on received qubits. <code>α = 0.2 dB/km</code>, <code>η_det = 0.9</code>.</div>
+      </div>
+      <div class="eq-card reveal">
+        <div class="eq-t"><span class="dot" style="background:var(--c-survey)"></span>Polarization drift (depolarizing)</div>
+        <div class="eq-math">$$p_\text{pol}=\min\!\left(0.5,\ r\,L\right)$$ $$\mathcal{E}(\rho)=(1-p_\text{pol})\,\rho+\frac{p_\text{pol}}{3}\big(X\rho X+Y\rho Y+Z\rho Z\big)$$</div>
+        <div class="eq-d">Stress-induced birefringence rotates polarization with distance, modeled as symmetric Pauli noise. Drift rate <code>r = 0.002 /km</code>.</div>
+      </div>
+      <div class="eq-card reveal">
+        <div class="eq-t"><span class="dot" style="background:var(--brand-2)"></span>Phase noise (phase damping)</div>
+        <div class="eq-math">$$\lambda=\min\!\left(0.3,\ \kappa\,T\,L\right)$$ $$K_0=\begin{pmatrix}1&0\\[2pt]0&\sqrt{1-\lambda}\end{pmatrix},\ K_1=\begin{pmatrix}0&0\\[2pt]0&\sqrt{\lambda}\end{pmatrix}$$</div>
+        <div class="eq-d">Loss of phase coherence growing with temperature and distance. <code>κ = 10⁻⁶ /(K·km)</code>, <code>T = 300 K</code>.</div>
+      </div>
+      <div class="eq-card reveal">
+        <div class="eq-t"><span class="dot" style="background:var(--c-sim)"></span>Timing jitter &amp; thermal relaxation</div>
+        <div class="eq-math">$$p_z=\min\!\left(0.2,\ 10^{-5}\,\tau_j\right),\quad \mathcal{E}(\rho)=(1-p_z)\rho+p_z\,Z\rho Z$$ $$T_2\le 2T_1,\qquad p_\text{err}=1-e^{-t/T_1}$$</div>
+        <div class="eq-d">Detector timing uncertainty causes pure dephasing; environmental decoherence uses combined T₁/T₂ relaxation. <code>τⱼ = 50 ns</code>.</div>
+      </div>
+    </div>
+
+    <!-- Graphs -->
+    <div class="subhead reveal"><span class="lbl">Results</span><h3>Simulation results</h3><span class="ln"></span></div>
+    <figure class="fig fig-wide reveal" style="margin-bottom:20px">
+      <img src="assets/sim_channel.png" alt="Fiber transmission and channel error probabilities vs distance" loading="lazy" />
+      <figcaption><b>Channel physics.</b> Photon transmission decays exponentially with fiber length (≈10% at 50 km, ≈1% at 100 km), while the effective amplitude-damping, polarization-drift, and phase-noise error probabilities grow and saturate with distance.</figcaption>
+    </figure>
+    <div class="fig-grid">
+      <figure class="fig reveal">
+        <img src="assets/sim_fidelity_qber.png" alt="Bell-state fidelity and BB84 QBER vs distance" loading="lazy" />
+        <figcaption><b>Protocol performance (real Aer runs).</b> Bell-state fidelity for entanglement distribution (8,192 shots) and BB84 QBER across an 11-point distance sweep. A secure key is only obtained while QBER stays below the 11% threshold — here up to ≈10 km under the default noise budget.</figcaption>
+      </figure>
+      <figure class="fig reveal">
+        <img src="assets/sim_calibration.png" alt="IBM hardware calibration: coherence and error rates" loading="lazy" />
+        <figcaption><b>Real hardware calibration.</b> Coherence times (T₁/T₂) and gate/readout error rates captured from three IBM Heron-class QPUs and used to drive the IBM-calibrated node mode.</figcaption>
+      </figure>
+    </div>
+
+    <!-- Calibration table -->
+    <div class="subhead reveal"><span class="lbl">Hardware data</span><h3>Latest node calibration snapshots</h3><span class="ln"></span></div>
+    <div class="tbl-wrap reveal">
+      <table class="cal">
+        <thead>
+          <tr><th>Backend</th><th>Qubits</th><th>T₁ (µs)</th><th>T₂ (µs)</th><th>1-qubit err</th><th>2-qubit (CX) err</th><th>Readout err</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="qpu">ibm_fez</td><td class="mono">156</td><td class="mono">145.4</td><td class="mono">104.9</td><td class="mono">1.32%</td><td class="mono">1.00%</td><td class="mono">2.23%</td></tr>
+          <tr><td class="qpu">ibm_kingston</td><td class="mono">156</td><td class="mono">246.0</td><td class="mono">165.9</td><td class="mono">2.61%</td><td class="mono">1.00%</td><td class="mono">1.65%</td></tr>
+          <tr><td class="qpu">ibm_marrakesh</td><td class="mono">156</td><td class="mono">190.8</td><td class="mono">119.0</td><td class="mono">2.61%</td><td class="mono">1.00%</td><td class="mono">3.12%</td></tr>
+        </tbody>
+        <caption>Most-recent live-hardware snapshot per backend, from 91 calibration snapshots and 94 fitted noise models (mean fit quality 0.98) in the local SQLite store.</caption>
+      </table>
+    </div>
   </div>
 </section>
 
@@ -424,8 +533,8 @@
     <div class="data-split-label sim reveal"><span>Quantum simulator</span><span class="ln"></span></div>
     <div class="data-grid">
       <div class="card data-card sim reveal"><div class="top"><span class="tg">Hardware</span></div><div class="big" data-count="3">0</div><div class="desc">real IBM superconducting QPUs</div></div>
-      <div class="card data-card sim reveal"><div class="top"><span class="tg">Calibration</span></div><div class="big" data-count="18">0</div><div class="desc">live calibration snapshots</div></div>
-      <div class="card data-card sim reveal"><div class="top"><span class="tg">Models</span></div><div class="big" data-count="21">0</div><div class="desc">fitted noise models</div></div>
+      <div class="card data-card sim reveal"><div class="top"><span class="tg">Calibration</span></div><div class="big" data-count="91">0</div><div class="desc">live calibration snapshots</div></div>
+      <div class="card data-card sim reveal"><div class="top"><span class="tg">Models</span></div><div class="big" data-count="94">0</div><div class="desc">fitted noise models</div></div>
       <div class="card data-card sim reveal"><div class="top"><span class="tg">Error types</span></div><div class="big" data-count="7">0</div><div class="desc">custom channel error models</div></div>
     </div>
     <p class="map-note" style="margin-top:26px">Stored in a local ChromaDB vector store (mining) and a SQLite data store (simulator). Snapshot from the development environment.</p>
@@ -512,6 +621,19 @@
     });
   },{threshold:.14});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  document.addEventListener("DOMContentLoaded", function(){
+    if (window.renderMathInElement){
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "\\[", right: "\\]", display: true},
+          {left: "$", right: "$", display: false}
+        ],
+        throwOnError: false
+      });
+    }
+  });
 </script>
 </body>
 </html>
