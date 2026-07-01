@@ -225,6 +225,50 @@
   table.cal .mono{font-family:'JetBrains Mono',monospace;color:var(--text)}
   table.cal caption{caption-side:bottom;color:var(--faint);font-size:12.5px;padding:12px 16px;text-align:left}
 
+  /* taxonomy tables (left-aligned) */
+  .taxo-wrap{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--panel)}
+  .taxo-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg-soft)}
+  .taxo-head .lb{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:6px}
+  .taxo-head .lb.node{color:var(--c-sim);background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.3)}
+  .taxo-head .lb.chan{color:var(--c-mine);background:rgba(94,234,212,.10);border:1px solid rgba(94,234,212,.3)}
+  .taxo-head .h{font-size:14.5px;font-weight:700}
+  .taxo-head .c{margin-left:auto;color:var(--faint);font-size:12.5px}
+  table.taxo{width:100%;border-collapse:collapse;font-size:13px}
+  table.taxo th,table.taxo td{padding:11px 18px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+  table.taxo thead th{color:var(--faint);font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+  table.taxo tbody tr:last-child td{border-bottom:none}
+  table.taxo tbody tr:hover{background:var(--panel-2)}
+  table.taxo td.nm{font-weight:700;color:var(--text);white-space:nowrap}
+  table.taxo .ch{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--brand);background:rgba(94,234,212,.08);padding:2px 8px;border-radius:6px;white-space:nowrap}
+  table.taxo .sc{color:var(--muted)}
+  .taxo-note{color:var(--faint);font-size:13px;margin-top:14px}
+  .taxo-note code{color:var(--brand);font-size:12px;background:rgba(94,234,212,.08);padding:1px 6px;border-radius:5px}
+
+  /* use-case cards */
+  .use-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .use-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden}
+  .use-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px}
+  .use-card.twin::before{background:var(--c-mine)}
+  .use-card.live::before{background:var(--c-sim)}
+  .use-card .uh{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+  .use-card.twin .uh{color:var(--c-mine)}
+  .use-card.live .uh{color:var(--c-sim)}
+  .use-card h4{font-size:18px;font-weight:800;letter-spacing:-.01em;margin-bottom:12px}
+  .use-card ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .use-card li{color:var(--muted);font-size:13.5px;line-height:1.5;padding-left:20px;position:relative}
+  .use-card li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:50%}
+  .use-card.twin li::before{background:var(--c-mine)}
+  .use-card.live li::before{background:var(--c-sim)}
+  .use-card li b{color:var(--text);font-weight:700}
+  .use-card code{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--brand);background:rgba(94,234,212,.08);padding:1px 6px;border-radius:5px}
+
+  /* collected-data chips */
+  .collect{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+  .collect .ci{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+  .collect .ci .n{font-size:14px;font-weight:700;color:var(--text)}
+  .collect .ci .d{color:var(--muted);font-size:12.5px;margin-top:4px;line-height:1.45}
+  .collect .ci .src{display:inline-block;margin-top:9px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--faint);background:rgba(255,255,255,.04);border:1px solid var(--border);padding:2px 7px;border-radius:5px}
+
   .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1)}
   .reveal.in{opacity:1;transform:none}
 
@@ -238,6 +282,8 @@
     .repo-grid{grid-template-columns:1fr}
     .fig-grid{grid-template-columns:1fr}
     .eq-grid{grid-template-columns:1fr}
+    .use-grid{grid-template-columns:1fr}
+    .collect{grid-template-columns:1fr}
   }
   @media(max-width:640px){
     .nav-links{display:none}
@@ -445,12 +491,80 @@
       </div>
     </div>
 
+    <!-- What you can do -->
+    <div class="subhead reveal"><span class="lbl">Capabilities</span><h3>What you can do with the simulator</h3><span class="ln"></span></div>
+    <p class="lead reveal" style="margin:-8px 0 26px">The simulator ships with a no-code web dashboard organised into three workspaces — <b>Simulate</b>, <b>Network</b>, and <b>IBM &amp; Data</b> — so an experiment can be configured, run, and analysed entirely from the browser.</p>
+    <div class="feat-grid">
+      <div class="card feat reveal">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg></div>
+        <h3>No-code dashboard</h3><p>Configure, run, and visualise experiments from three workspaces — Simulate, Network, and IBM &amp; Data — no scripting required.</p>
+      </div>
+      <div class="card feat reveal">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="18" cy="18" r="2"/></svg></div>
+        <h3>Tune the channel</h3><p>Set distance, fiber loss, detector efficiency, dark-count rate, timing jitter, temperature, and polarization drift, then see their effect instantly.</p>
+      </div>
+      <div class="card feat reveal">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="12" r="2.5"/><path d="M8.5 12h7"/></svg></div>
+        <h3>Run protocols</h3><p>Entanglement distribution, quantum teleportation, BB84 QKD with security analysis, data transmission, and automated distance sweeps.</p>
+      </div>
+      <div class="card feat reveal">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/></svg></div>
+        <h3>Author error models</h3><p>Enable, disable, or add your own node- and channel-level error types — from the UI or a config file — and rerun without touching code.</p>
+      </div>
+      <div class="card feat reveal">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><circle cx="18" cy="6" r="2.4"/><path d="M8.4 6h7.2M6 8.4v7.2M8 16l8-8"/></svg></div>
+        <h3>Build multi-node networks</h3><p>Compose networks from nodes and links, lay out the topology, and run experiments across an end-to-end path.</p>
+      </div>
+      <div class="card feat reveal">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 3 4-6"/></svg></div>
+        <h3>Analyse &amp; compare</h3><p>Fidelity, QBER with the security threshold, per-channel error propagation, and a full run history for side-by-side comparison.</p>
+      </div>
+    </div>
+
     <!-- Simulator architecture -->
     <div class="subhead reveal"><span class="lbl">Architecture</span><h3>System architecture</h3><span class="ln"></span></div>
     <figure class="fig fig-wide reveal">
       <img src="assets/sim_architecture.png" alt="Quantum network simulator architecture diagram" loading="lazy" />
       <figcaption><b>Two-layer design.</b> Each <b>node</b> runs in one of three modes — local Aer, IBM-calibrated (real T₁/T₂ and gate-error snapshots), or live IBM hardware — while each <b>link</b> applies a distance-dependent photonic channel model. Protocols run over the node–link pair; results and fitted models are persisted to a SQLite store and fed back into node/channel generation.</figcaption>
     </figure>
+
+    <!-- Error taxonomy by layer -->
+    <div class="subhead reveal"><span class="lbl">Error models</span><h3>Error types by layer</h3><span class="ln"></span></div>
+    <p class="lead reveal" style="margin:-8px 0 26px">Errors are organised into two layers. <b>Node-level</b> errors act on local operations at each endpoint; <b>channel-level</b> errors act during transmission and scale with distance. Every error is implemented as a Qiskit quantum channel.</p>
+
+    <div class="taxo-wrap reveal" style="margin-bottom:22px">
+      <div class="taxo-head"><span class="lb node">Node layer</span><span class="h">Local operation errors</span><span class="c">applied at Alice / Bob</span></div>
+      <table class="taxo">
+        <thead><tr><th>Error type</th><th>Physical cause</th><th>Quantum channel</th></tr></thead>
+        <tbody>
+          <tr><td class="nm">Gate imperfection</td><td>Control-pulse imperfections in single-qubit gates</td><td><span class="ch">depolarizing</span></td></tr>
+          <tr><td class="nm">Two-qubit crosstalk</td><td>Unwanted interactions during CNOT / CZ / SWAP</td><td><span class="ch">depolarizing</span></td></tr>
+          <tr><td class="nm">Qubit memory decoherence</td><td>Phase loss while idling in quantum memory</td><td><span class="ch">phase damping</span></td></tr>
+          <tr><td class="nm">Measurement error</td><td>Detector imperfections at readout (mostly bit-flip)</td><td><span class="ch">Pauli (X/Y/Z)</span></td></tr>
+          <tr><td class="nm">Timing jitter</td><td>Detection-timing uncertainty → loss of coherence</td><td><span class="ch">dephasing (Z)</span></td></tr>
+          <tr><td class="nm">Detector dark counts</td><td>Thermal false-positive detections</td><td><span class="ch">bit flip</span></td></tr>
+          <tr><td class="nm">Environmental decoherence</td><td>Temperature-dependent T₁ / T₂ decay</td><td><span class="ch">thermal relaxation</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="taxo-wrap reveal">
+      <div class="taxo-head"><span class="lb chan">Channel layer</span><span class="h">Transmission / link errors</span><span class="c">distance-dependent</span></div>
+      <table class="taxo">
+        <thead><tr><th>Error type</th><th>Physical cause</th><th>Quantum channel</th><th>Distance scaling</th></tr></thead>
+        <tbody>
+          <tr><td class="nm">Fiber attenuation</td><td>Photon absorption &amp; scattering (~0.2 dB/km)</td><td><span class="ch">amplitude damping</span></td><td class="sc">exponential loss</td></tr>
+          <tr><td class="nm">Polarization drift</td><td>Stress-induced birefringence in fiber</td><td><span class="ch">Pauli / depolarizing</span></td><td class="sc">linear</td></tr>
+          <tr><td class="nm">Phase noise</td><td>Path-length &amp; thermal fluctuations</td><td><span class="ch">phase damping</span></td><td class="sc">linear (× T)</td></tr>
+          <tr><td class="nm">Chromatic dispersion</td><td>Wavelength-dependent propagation velocity</td><td><span class="ch">dephasing</span></td><td class="sc">linear</td></tr>
+          <tr><td class="nm">Splice / connector loss</td><td>Photon loss at fiber joints (~0.1 / km)</td><td><span class="ch">amplitude damping</span></td><td class="sc">per splice</td></tr>
+          <tr><td class="nm">WDM crosstalk</td><td>Leakage from adjacent wavelength channels</td><td><span class="ch">depolarizing</span></td><td class="sc">constant</td></tr>
+          <tr><td class="nm">Quantum repeater noise</td><td>Noise added at repeater stations</td><td><span class="ch">depolarizing</span></td><td class="sc">per repeater</td></tr>
+          <tr><td class="nm">Atmospheric turbulence</td><td>Free-space phase noise (satellite / wireless)</td><td><span class="ch">phase damping</span></td><td class="sc">exponential</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="taxo-note reveal">All error types are built on five primitive channels — <code>pauli</code>, <code>depolarizing</code>, <code>amplitude_damping</code>, <code>phase_damping</code>, <code>thermal_relaxation</code> — and users can define additional custom errors at either layer with their own probability and distance scaling (<code>linear</code>, <code>exponential</code>, <code>constant</code>, per-splice, or per-repeater).</p>
 
     <!-- Error-model equations -->
     <div class="subhead reveal"><span class="lbl">Error models</span><h3>Channel error-model equations</h3><span class="ln"></span></div>
@@ -475,6 +589,48 @@
         <div class="eq-t"><span class="dot" style="background:var(--c-sim)"></span>Timing jitter &amp; thermal relaxation</div>
         <div class="eq-math">$$p_z=\min\!\left(0.2,\ 10^{-5}\,\tau_j\right),\quad \mathcal{E}(\rho)=(1-p_z)\rho+p_z\,Z\rho Z$$ $$T_2\le 2T_1,\qquad p_\text{err}=1-e^{-t/T_1}$$</div>
         <div class="eq-d">Detector timing uncertainty causes pure dephasing; environmental decoherence uses combined T₁/T₂ relaxation. <code>τⱼ = 50 ns</code>.</div>
+      </div>
+    </div>
+
+    <!-- IBM hardware integration -->
+    <div class="subhead reveal"><span class="lbl">Hardware</span><h3>Real IBM hardware integration</h3><span class="ln"></span></div>
+    <p class="lead reveal" style="margin:-8px 0 26px">Nodes are grounded in real superconducting quantum processors. Calibration is harvested from IBM backends and then used two ways: as a locally-fitted <b>digital twin</b>, and as a <b>real-time live node</b> executing on the actual hardware.</p>
+
+    <figure class="fig fig-wide reveal" style="margin-bottom:24px">
+      <img src="assets/sim_ibm_flow.png" alt="IBM hardware data-flow diagram" loading="lazy" />
+      <figcaption><b>Data flow.</b> A background collector reads device properties from IBM backends (metadata-only, so it consumes no quota), stores them as calibration snapshots in SQLite, and feeds them into the two node modes below.</figcaption>
+    </figure>
+
+    <h4 style="font-size:15px;font-weight:700;margin:0 0 14px;color:var(--muted)">What is collected from each backend</h4>
+    <div class="collect reveal" style="margin-bottom:30px">
+      <div class="ci"><div class="n">Coherence times</div><div class="d">Per-qubit T₁ (relaxation) and T₂ (dephasing), averaged across the device.</div><span class="src">props.t1(q) · props.t2(q)</span></div>
+      <div class="ci"><div class="n">Gate errors</div><div class="d">Single-qubit (sx, x) and two-qubit CNOT gate error rates.</div><span class="src">props.gate_error()</span></div>
+      <div class="ci"><div class="n">Readout error</div><div class="d">Per-qubit measurement assignment error probability.</div><span class="src">props.readout_error(q)</span></div>
+      <div class="ci"><div class="n">Device geometry</div><div class="d">Qubit count and full per-qubit raw calibration record.</div><span class="src">config.n_qubits</span></div>
+      <div class="ci"><div class="n">Benchmark counts</div><div class="d">Bell / GHZ / identity-sequence results (manual, quota-aware).</div><span class="src">SamplerV2 · counts</span></div>
+      <div class="ci"><div class="n">Provenance</div><div class="d">Timestamp and source tag (live / stored / defaults) for every snapshot.</div><span class="src">timestamp · source</span></div>
+    </div>
+
+    <div class="use-grid">
+      <div class="use-card twin reveal">
+        <div class="uh">Use 1 · IBM-calibrated</div>
+        <h4>Digital-twin node</h4>
+        <ul>
+          <li>Averages up to <b>20 recent calibration snapshots</b> into a stable fitted noise model (mean, std, min/max per parameter).</li>
+          <li>Reports a <b>fit-quality</b> score of <code>1 − CV</code> (coefficient of variation) — lower device drift means a more reliable twin.</li>
+          <li>Builds a local Aer <code>NoiseModel</code>: depolarizing on 1- and 2-qubit gates, <b>thermal relaxation</b> (T₁/T₂) on idle, and a readout-error matrix.</li>
+          <li>Runs <b>entirely offline with no quota</b> — a faithful stand-in for the real QPU inside larger network simulations.</li>
+        </ul>
+      </div>
+      <div class="use-card live reveal">
+        <div class="uh">Use 2 · IBM-live</div>
+        <h4>Real-time live node</h4>
+        <ul>
+          <li>Transpiles the circuit for the target backend and submits it via <b>Qiskit Runtime</b> <code>SamplerV2</code>.</li>
+          <li>Jobs run <b>asynchronously</b> — the node returns a job ID that is polled until real measurement counts return.</li>
+          <li>Every submission is <b>quota-guarded</b> by a usage tracker against the 10 min/month budget: it estimates, warns, and blocks before spending time.</li>
+          <li>Falls back gracefully: <b>live → stored snapshot → typical defaults</b>, so simulations never stall when hardware is unreachable.</li>
+        </ul>
       </div>
     </div>
 
