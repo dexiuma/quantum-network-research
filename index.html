@@ -262,6 +262,19 @@
   .use-card li b{color:var(--text);font-weight:700}
   .use-card code{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--brand);background:rgba(94,234,212,.08);padding:1px 6px;border-radius:5px}
 
+  /* experiment message flow */
+  .msg-flow{display:flex;flex-direction:column;gap:0;margin:0 0 22px}
+  .msg-card{background:var(--panel);border:1px solid var(--border-2);border-radius:14px;padding:18px 22px}
+  .msg-card .mh{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px}
+  .msg-card.sent .mh{color:var(--brand-2)}
+  .msg-card.recv .mh{color:#4ade80}
+  .msg-card .mtext{font-family:'JetBrains Mono',monospace;font-size:14.5px;line-height:1.65;color:var(--text)}
+  .msg-card .mmeta{margin-top:10px;color:var(--faint);font-size:12.5px}
+  .msg-badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.35);color:#4ade80;letter-spacing:.03em}
+  .msg-hop{display:flex;align-items:center;gap:12px;justify-content:center;padding:10px 0;color:var(--muted);font-size:13px}
+  .msg-hop .hopline{flex:0 0 26px;height:22px;border-left:2px dashed var(--border-2);margin-left:40px}
+  .msg-hop .hoptxt b{color:var(--text)}
+
   /* collected-data chips */
   .collect{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
   .collect .ci{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
@@ -475,7 +488,7 @@
     <div class="split rev reveal" style="margin-bottom:46px">
       <div>
         <div class="clist">
-          <div class="citem"><span class="ck sim-k">N</span><div><h4>Nodes — superconducting QPUs</h4><p>Three backend modes: pure local Aer, <em>IBM-calibrated</em> (driven by real T1/T2 &amp; gate-error snapshots), and live IBM hardware submission.</p></div></div>
+          <div class="citem"><span class="ck sim-k">N</span><div><h4>Nodes — superconducting QPUs</h4><p>Four interchangeable node-error modes: pure local Aer, <em>digital twin</em> (fitted from real T1/T2 &amp; gate-error history), <em>equations</em> (rates derived from device physics), and live IBM hardware submission.</p></div></div>
           <div class="citem"><span class="ck sim-k">L</span><div><h4>Links — photonic channels</h4><p>Each link carries its own distance-dependent channel error model for fiber or free-space transmission.</p></div></div>
           <div class="citem"><span class="ck sim-k">E</span><div><h4>Custom error models</h4><p>Seven physical error types: fiber attenuation, polarization drift, phase noise, timing jitter, dark counts, environmental decoherence, chromatic dispersion.</p></div></div>
           <div class="citem"><span class="ck sim-k">P</span><div><h4>Protocols</h4><p>Entanglement distribution, quantum teleportation, BB84 QKD, and distance-sweep fidelity analysis.</p></div></div>
@@ -493,11 +506,11 @@
 
     <!-- What you can do -->
     <div class="subhead reveal"><span class="lbl">Capabilities</span><h3>What you can do with the simulator</h3><span class="ln"></span></div>
-    <p class="lead reveal" style="margin:-8px 0 26px">The simulator ships with a no-code web dashboard organised into three workspaces — <b>Simulate</b>, <b>Network</b>, and <b>IBM &amp; Data</b> — so an experiment can be configured, run, and analysed entirely from the browser.</p>
+    <p class="lead reveal" style="margin:-8px 0 26px">The simulator ships with a no-code web dashboard organised into six tabs — <b>Simulate</b>, <b>Visualization</b>, <b>Network</b>, <b>IBM Monitor</b>, <b>Digital Twin</b>, and <b>Data</b> — so an experiment can be configured, run, and analysed entirely from the browser.</p>
     <div class="feat-grid">
       <div class="card feat reveal">
         <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg></div>
-        <h3>No-code dashboard</h3><p>Configure, run, and visualise experiments from three workspaces — Simulate, Network, and IBM &amp; Data — no scripting required.</p>
+        <h3>No-code dashboard</h3><p>Configure, run, and visualise experiments from six tabs — including a live TensorFlow-Playground-style animation of a qubit crossing the link — no scripting required.</p>
       </div>
       <div class="card feat reveal">
         <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="18" cy="18" r="2"/></svg></div>
@@ -525,7 +538,7 @@
     <div class="subhead reveal"><span class="lbl">Architecture</span><h3>System architecture</h3><span class="ln"></span></div>
     <figure class="fig fig-wide reveal">
       <img src="assets/sim_architecture.png" alt="Quantum network simulator architecture diagram" loading="lazy" />
-      <figcaption><b>Two-layer design.</b> Each <b>node</b> runs in one of three modes — local Aer, IBM-calibrated (real T₁/T₂ and gate-error snapshots), or live IBM hardware — while each <b>link</b> applies a distance-dependent photonic channel model. Protocols run over the node–link pair; results and fitted models are persisted to a SQLite store and fed back into node/channel generation.</figcaption>
+      <figcaption><b>Two-layer design.</b> Each <b>node</b> runs in one of four modes — local Aer, digital twin (fitted from real calibration history), live IBM hardware, or pure equations — while each <b>link</b> applies a distance-dependent photonic channel model. Protocols run over the node–link pair; results and fitted models are persisted to a SQLite store and fed back into node/channel generation. Unfamiliar terms are spelled out in the glossary strip at the bottom of the diagram.</figcaption>
     </figure>
 
     <!-- Error taxonomy by layer -->
@@ -533,64 +546,99 @@
     <p class="lead reveal" style="margin:-8px 0 26px">Errors are organised into two layers. <b>Node-level</b> errors act on local operations at each endpoint; <b>channel-level</b> errors act during transmission and scale with distance. Every error is implemented as a Qiskit quantum channel.</p>
 
     <div class="taxo-wrap reveal" style="margin-bottom:22px">
-      <div class="taxo-head"><span class="lb node">Node layer</span><span class="h">Local operation errors</span><span class="c">applied at Alice / Bob</span></div>
+      <div class="taxo-head"><span class="lb node">Node layer</span><span class="h">Processor errors at each endpoint</span><span class="c">4 built-in types · applied at Alice / Bob</span></div>
       <table class="taxo">
         <thead><tr><th>Error type</th><th>Physical cause</th><th>Quantum channel</th></tr></thead>
         <tbody>
-          <tr><td class="nm">Gate imperfection</td><td>Control-pulse imperfections in single-qubit gates</td><td><span class="ch">depolarizing</span></td></tr>
-          <tr><td class="nm">Two-qubit crosstalk</td><td>Unwanted interactions during CNOT / CZ / SWAP</td><td><span class="ch">depolarizing</span></td></tr>
-          <tr><td class="nm">Qubit memory decoherence</td><td>Phase loss while idling in quantum memory</td><td><span class="ch">phase damping</span></td></tr>
-          <tr><td class="nm">Measurement error</td><td>Detector imperfections at readout (mostly bit-flip)</td><td><span class="ch">Pauli (X/Y/Z)</span></td></tr>
-          <tr><td class="nm">Timing jitter</td><td>Detection-timing uncertainty → loss of coherence</td><td><span class="ch">dephasing (Z)</span></td></tr>
-          <tr><td class="nm">Detector dark counts</td><td>Thermal false-positive detections</td><td><span class="ch">bit flip</span></td></tr>
-          <tr><td class="nm">Environmental decoherence</td><td>Temperature-dependent T₁ / T₂ decay</td><td><span class="ch">thermal relaxation</span></td></tr>
+          <tr><td class="nm">1-qubit gate error</td><td>Control-pulse imperfections in single-qubit gates</td><td><span class="ch">depolarizing</span></td></tr>
+          <tr><td class="nm">2-qubit gate error</td><td>Unwanted interactions during CX / CZ / SWAP</td><td><span class="ch">depolarizing</span></td></tr>
+          <tr><td class="nm">Readout error</td><td>Misassigned measurement outcomes (real devices misread |1⟩ more often than |0⟩)</td><td><span class="ch">assignment matrix</span></td></tr>
+          <tr><td class="nm">Thermal relaxation</td><td>T₁ / T₂ decay while a qubit idles (T₂ ≤ 2T₁ enforced)</td><td><span class="ch">thermal relaxation</span></td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="taxo-wrap reveal">
-      <div class="taxo-head"><span class="lb chan">Channel layer</span><span class="h">Transmission / link errors</span><span class="c">distance-dependent</span></div>
+      <div class="taxo-head"><span class="lb chan">Link layer</span><span class="h">Transmission / channel errors</span><span class="c">8 built-in types · distance-dependent</span></div>
       <table class="taxo">
         <thead><tr><th>Error type</th><th>Physical cause</th><th>Quantum channel</th><th>Distance scaling</th></tr></thead>
         <tbody>
-          <tr><td class="nm">Fiber attenuation</td><td>Photon absorption &amp; scattering (~0.2 dB/km)</td><td><span class="ch">amplitude damping</span></td><td class="sc">exponential loss</td></tr>
-          <tr><td class="nm">Polarization drift</td><td>Stress-induced birefringence in fiber</td><td><span class="ch">Pauli / depolarizing</span></td><td class="sc">linear</td></tr>
+          <tr><td class="nm">Fiber attenuation</td><td>Photon absorption &amp; scattering (0.2 dB/km)</td><td><span class="ch">amplitude damping</span></td><td class="sc">exponential loss</td></tr>
+          <tr><td class="nm">Photon loss</td><td>Combined fiber loss and detector inefficiency</td><td><span class="ch">amplitude damping</span></td><td class="sc">exponential</td></tr>
+          <tr><td class="nm">Polarization drift</td><td>Stress-induced birefringence in fiber</td><td><span class="ch">Pauli (X/Y/Z)</span></td><td class="sc">linear</td></tr>
           <tr><td class="nm">Phase noise</td><td>Path-length &amp; thermal fluctuations</td><td><span class="ch">phase damping</span></td><td class="sc">linear (× T)</td></tr>
-          <tr><td class="nm">Chromatic dispersion</td><td>Wavelength-dependent propagation velocity</td><td><span class="ch">dephasing</span></td><td class="sc">linear</td></tr>
-          <tr><td class="nm">Splice / connector loss</td><td>Photon loss at fiber joints (~0.1 / km)</td><td><span class="ch">amplitude damping</span></td><td class="sc">per splice</td></tr>
-          <tr><td class="nm">WDM crosstalk</td><td>Leakage from adjacent wavelength channels</td><td><span class="ch">depolarizing</span></td><td class="sc">constant</td></tr>
-          <tr><td class="nm">Quantum repeater noise</td><td>Noise added at repeater stations</td><td><span class="ch">depolarizing</span></td><td class="sc">per repeater</td></tr>
-          <tr><td class="nm">Atmospheric turbulence</td><td>Free-space phase noise (satellite / wireless)</td><td><span class="ch">phase damping</span></td><td class="sc">exponential</td></tr>
+          <tr><td class="nm">Timing jitter</td><td>Detection-timing uncertainty → loss of coherence</td><td><span class="ch">dephasing (Z)</span></td><td class="sc">constant (× jitter)</td></tr>
+          <tr><td class="nm">Chromatic dispersion</td><td>Wavelength-dependent propagation velocity broadens pulses</td><td><span class="ch">dephasing</span></td><td class="sc">quadratic, saturating</td></tr>
+          <tr><td class="nm">Detector dark counts</td><td>Thermal false-positive detections</td><td><span class="ch">bit flip</span></td><td class="sc">constant</td></tr>
+          <tr><td class="nm">Environmental decoherence</td><td>Temperature-degraded T₁ / T₂ over the transit time</td><td><span class="ch">thermal relaxation</span></td><td class="sc">linear (transit time)</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="taxo-note reveal">All error types are built on five primitive channels — <code>pauli</code>, <code>depolarizing</code>, <code>amplitude_damping</code>, <code>phase_damping</code>, <code>thermal_relaxation</code> — and users can define additional custom errors at either layer with their own probability and distance scaling (<code>linear</code>, <code>exponential</code>, <code>constant</code>, per-splice, or per-repeater).</p>
+    <p class="taxo-note reveal">This node/link split is the app-wide taxonomy: every chart, comparison, and report categorises errors the same way. All types are built on five primitive channels — <code>pauli</code>, <code>depolarizing</code>, <code>amplitude_damping</code>, <code>phase_damping</code>, <code>thermal_relaxation</code> — and users can define additional custom errors at either layer (splice loss, WDM crosstalk, repeater noise, an eavesdropper model, …) with their own probability and distance scaling (<code>linear</code>, <code>exponential</code>, <code>constant</code>, per-splice, or per-repeater), from the UI or a config file.</p>
 
     <!-- Error-model equations -->
     <div class="subhead reveal"><span class="lbl">Error models</span><h3>Channel error-model equations</h3><span class="ln"></span></div>
-    <p class="lead reveal" style="margin:-8px 0 26px">Every link error is a physically-motivated quantum channel whose strength scales with distance, temperature, and hardware parameters. These are the exact models implemented in the simulator.</p>
+    <p class="lead reveal" style="margin:-8px 0 26px">Every link error is a physically-motivated quantum channel whose strength is an explicit, closed-form function of the link's physical parameters. These are the exact expressions implemented in the simulator — no hidden fitting; change a parameter and every probability follows.</p>
+
+    <div class="tbl-wrap reveal" style="margin-bottom:22px">
+      <table class="cal">
+        <thead><tr><th>Symbol</th><th>Physical parameter</th><th>Default</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="qpu">L</td><td style="text-align:left">distance_km</td><td class="mono">50 km</td><td style="text-align:left">Link length</td></tr>
+          <tr><td class="qpu">α</td><td style="text-align:left">fiber_loss_db_per_km</td><td class="mono">0.2 dB/km</td><td style="text-align:left">Attenuation of telecom fiber at 1550 nm</td></tr>
+          <tr><td class="qpu">η<sub>d</sub></td><td style="text-align:left">detector_efficiency</td><td class="mono">0.9</td><td style="text-align:left">Single-photon detector efficiency</td></tr>
+          <tr><td class="qpu">p<sub>dark</sub></td><td style="text-align:left">dark_count_rate</td><td class="mono">10⁻⁶</td><td style="text-align:left">False-detection probability per window</td></tr>
+          <tr><td class="qpu">j</td><td style="text-align:left">timing_jitter_ns</td><td class="mono">50 ns</td><td style="text-align:left">Detector timing uncertainty</td></tr>
+          <tr><td class="qpu">T<sub>K</sub></td><td style="text-align:left">temperature_k</td><td class="mono">300 K</td><td style="text-align:left">Operating temperature</td></tr>
+          <tr><td class="qpu">r</td><td style="text-align:left">polarization_drift_rate</td><td class="mono">0.002 /km</td><td style="text-align:left">Polarization drift per kilometre</td></tr>
+        </tbody>
+        <caption>The seven physical inputs. Every channel probability below is derived from these — they are the only knobs.</caption>
+      </table>
+    </div>
+
     <div class="eq-grid">
       <div class="eq-card reveal">
-        <div class="eq-t"><span class="dot" style="background:var(--c-mine)"></span>Fiber attenuation &amp; amplitude damping</div>
-        <div class="eq-math">$$\eta(L)=10^{-\alpha L/10},\qquad p_\text{loss}=1-\eta\,\eta_\text{det}$$ $$\gamma_\text{eff}=\min\!\left(0.5,\ 0.3\sqrt{p_\text{loss}}\right)$$ $$K_0=\begin{pmatrix}1&0\\[2pt]0&\sqrt{1-\gamma_\text{eff}}\end{pmatrix},\ K_1=\begin{pmatrix}0&\sqrt{\gamma_\text{eff}}\\[2pt]0&0\end{pmatrix}$$</div>
-        <div class="eq-d">Photon survival through single-mode fiber, with an effective amplitude-damping channel on received qubits. <code>α = 0.2 dB/km</code>, <code>η_det = 0.9</code>.</div>
+        <div class="eq-t"><span class="dot" style="background:var(--c-mine)"></span>1 · Fiber attenuation → amplitude damping</div>
+        <div class="eq-math">$$T=10^{-\alpha L/10},\qquad p_\text{loss}=1-T\,\eta_d$$ $$\gamma_\text{eff}=\min\!\left(0.5,\ 0.3\sqrt{p_\text{loss}}\right)$$ $$K_0=\begin{pmatrix}1&0\\[2pt]0&\sqrt{1-\gamma_\text{eff}}\end{pmatrix},\ K_1=\begin{pmatrix}0&\sqrt{\gamma_\text{eff}}\\[2pt]0&0\end{pmatrix}$$</div>
+        <div class="eq-d">Beer–Lambert survival through single-mode fiber. Photon loss in a real network is <em>heralded</em> (a lost photon is a missed detection, not a wrong bit), so an <em>effective</em> amplitude-damping channel with Kraus operators K₀, K₁ is applied to the qubits that do arrive.</div>
       </div>
       <div class="eq-card reveal">
-        <div class="eq-t"><span class="dot" style="background:var(--c-survey)"></span>Polarization drift (depolarizing)</div>
+        <div class="eq-t"><span class="dot" style="background:var(--c-survey)"></span>2 · Polarization drift → Pauli channel</div>
         <div class="eq-math">$$p_\text{pol}=\min\!\left(0.5,\ r\,L\right)$$ $$\mathcal{E}(\rho)=(1-p_\text{pol})\,\rho+\frac{p_\text{pol}}{3}\big(X\rho X+Y\rho Y+Z\rho Z\big)$$</div>
-        <div class="eq-d">Stress-induced birefringence rotates polarization with distance, modeled as symmetric Pauli noise. Drift rate <code>r = 0.002 /km</code>.</div>
+        <div class="eq-d">Stress-induced birefringence rotates polarization as the photon travels, modeled as symmetric Pauli noise (equal X, Y, Z probability) growing linearly with distance and clamped at ½ (fully mixed).</div>
       </div>
       <div class="eq-card reveal">
-        <div class="eq-t"><span class="dot" style="background:var(--brand-2)"></span>Phase noise (phase damping)</div>
-        <div class="eq-math">$$\lambda=\min\!\left(0.3,\ \kappa\,T\,L\right)$$ $$K_0=\begin{pmatrix}1&0\\[2pt]0&\sqrt{1-\lambda}\end{pmatrix},\ K_1=\begin{pmatrix}0&0\\[2pt]0&\sqrt{\lambda}\end{pmatrix}$$</div>
-        <div class="eq-d">Loss of phase coherence growing with temperature and distance. <code>κ = 10⁻⁶ /(K·km)</code>, <code>T = 300 K</code>.</div>
+        <div class="eq-t"><span class="dot" style="background:var(--brand-2)"></span>3 · Phase noise → phase damping</div>
+        <div class="eq-math">$$\lambda=\min\!\left(0.3,\ 10^{-6}\,T_K\,L\right)$$ $$K_0=\begin{pmatrix}1&0\\[2pt]0&\sqrt{1-\lambda}\end{pmatrix},\ K_1=\begin{pmatrix}0&0\\[2pt]0&\sqrt{\lambda}\end{pmatrix}$$</div>
+        <div class="eq-d">Path-length and thermal fluctuations destroy phase coherence without flipping the bit value — growing with both temperature and distance.</div>
       </div>
       <div class="eq-card reveal">
-        <div class="eq-t"><span class="dot" style="background:var(--c-sim)"></span>Timing jitter &amp; thermal relaxation</div>
-        <div class="eq-math">$$p_z=\min\!\left(0.2,\ 10^{-5}\,\tau_j\right),\quad \mathcal{E}(\rho)=(1-p_z)\rho+p_z\,Z\rho Z$$ $$T_2\le 2T_1,\qquad p_\text{err}=1-e^{-t/T_1}$$</div>
-        <div class="eq-d">Detector timing uncertainty causes pure dephasing; environmental decoherence uses combined T₁/T₂ relaxation. <code>τⱼ = 50 ns</code>.</div>
+        <div class="eq-t"><span class="dot" style="background:var(--c-sim)"></span>4 · Timing jitter → dephasing</div>
+        <div class="eq-math">$$p_Z=\min\!\left(0.2,\ 10^{-5}\,j\right)$$ $$\mathcal{E}(\rho)=(1-p_Z)\,\rho+p_Z\,Z\rho Z$$</div>
+        <div class="eq-d">Uncertainty in <em>when</em> the photon is detected translates into pure dephasing. Depends on the detector's jitter <code>j</code>, not on distance.</div>
+      </div>
+      <div class="eq-card reveal">
+        <div class="eq-t"><span class="dot" style="background:#f472b6"></span>5 · Detector dark counts → bit flip</div>
+        <div class="eq-math">$$\mathcal{E}(\rho)=(1-p_\text{dark})\,\rho+p_\text{dark}\,X\rho X$$</div>
+        <div class="eq-d">A thermal false click registers the wrong outcome — a bit-flip channel with the detector's dark-count probability, independent of distance.</div>
+      </div>
+      <div class="eq-card reveal">
+        <div class="eq-t"><span class="dot" style="background:var(--c-survey)"></span>6 · Environmental decoherence → thermal relaxation</div>
+        <div class="eq-math">$$\tau=\tfrac{T_K}{300},\quad T_1=\tfrac{100\,\mu s}{\tau},\quad T_2=\min\!\left(\tfrac{50\,\mu s}{\tau},\,2T_1\right)$$ $$t_\text{transit}=50\,\text{ns/km}\times L$$</div>
+        <div class="eq-d">Base coherence times degraded by temperature, applied over a transit time that grows with distance (including buffering overhead) via Qiskit's <code>thermal_relaxation_error(T₁, T₂, t)</code>.</div>
+      </div>
+      <div class="eq-card reveal">
+        <div class="eq-t"><span class="dot" style="background:var(--brand-2)"></span>7 · Chromatic dispersion → dephasing</div>
+        <div class="eq-math">$$\Delta\tau=D\,\Delta\lambda\,L,\qquad p_\text{disp}=\min\!\left(0.3,\ \left(\tfrac{\Delta\tau}{w}\right)^{2}\right)$$</div>
+        <div class="eq-d">Different wavelengths travel at different speeds, broadening the pulse by Δτ relative to the ≈1 ns detector coherence window <code>w</code>. Dispersion coefficient <code>D = 17 ps/(nm·km)</code>, source linewidth <code>Δλ = 0.1 nm</code>.</div>
+      </div>
+      <div class="eq-card reveal">
+        <div class="eq-t"><span class="dot" style="background:var(--c-mine)"></span>Composition — one channel per hop</div>
+        <div class="eq-math">$$\mathcal{E}_\text{link}=\mathcal{E}_7\circ\mathcal{E}_6\circ\cdots\circ\mathcal{E}_1$$ $$\mathcal{E}_\text{path}=\mathcal{E}_\text{hop}^{(N-1)}\circ\cdots\circ\mathcal{E}_\text{hop}^{(1)}$$</div>
+        <div class="eq-d">All seven channels are composed in sequence into one CPTP transmission error per link, bound to the <code>id</code> gate (the simulator's convention for "in transit"). Multi-hop paths compose one such error per hop.</div>
       </div>
     </div>
+    <p class="taxo-note reveal" style="margin-top:18px"><b style="color:var(--text)">Assumptions &amp; limits.</b> Derived probabilities are clamped to physically sensible saturation values (shown as <code>min(·)</code> above). Photon loss is treated as heralded, so attenuation acts as an effective damping on received qubits rather than as erasure. The 90% detector efficiency gives every link a ~10% amplitude-damping floor even at 0 km, and the reported Bell fidelity is the Z-basis correlation P(00)+P(11) — a phase-insensitive upper bound on true state fidelity. At the default 50 km these expressions give transmission T = 0.100, photon loss 0.910, polarization error 0.100, and phase noise 0.015 — the channel is dominated by attenuation, as expected physically.</p>
 
     <!-- IBM hardware integration -->
     <div class="subhead reveal"><span class="lbl">Hardware</span><h3>Real IBM hardware integration</h3><span class="ln"></span></div>
@@ -618,7 +666,7 @@
         <ul>
           <li>Averages up to <b>20 recent calibration snapshots</b> into a stable fitted noise model (mean, std, min/max per parameter).</li>
           <li>Reports a <b>fit-quality</b> score of <code>1 − CV</code> (coefficient of variation) — lower device drift means a more reliable twin.</li>
-          <li>Builds a local Aer <code>NoiseModel</code>: depolarizing on 1- and 2-qubit gates, <b>thermal relaxation</b> (T₁/T₂) on idle, and a readout-error matrix.</li>
+          <li>Builds a local Aer <code>NoiseModel</code>: depolarizing on 1- and 2-qubit gates, <b>thermal relaxation</b> (T₁/T₂) on idle, and an <b>empirically fitted asymmetric readout matrix</b> — real devices misread |1⟩ more often than |0⟩, and the twin reproduces that.</li>
           <li>Runs <b>entirely offline with no quota</b> — a faithful stand-in for the real QPU inside larger network simulations.</li>
         </ul>
       </div>
@@ -628,26 +676,84 @@
         <ul>
           <li>Transpiles the circuit for the target backend and submits it via <b>Qiskit Runtime</b> <code>SamplerV2</code>.</li>
           <li>Jobs run <b>asynchronously</b> — the node returns a job ID that is polled until real measurement counts return.</li>
-          <li>Every submission is <b>quota-guarded</b> by a usage tracker against the 10 min/month budget: it estimates, warns, and blocks before spending time.</li>
+          <li>Every submission is <b>quota-guarded</b> by a usage tracker against the 10 min/month budget: it estimates, warns, and blocks before spending time — then records the actually billed seconds after each job.</li>
           <li>Falls back gracefully: <b>live → stored snapshot → typical defaults</b>, so simulations never stall when hardware is unreachable.</li>
         </ul>
       </div>
     </div>
 
-    <!-- Graphs -->
-    <div class="subhead reveal"><span class="lbl">Results</span><h3>Simulation results</h3><span class="ln"></span></div>
+    <!-- Flagship experiment: three-mode comparison -->
+    <div class="subhead reveal"><span class="lbl">Results</span><h3>Simulation results — real hardware vs digital twin vs equations</h3><span class="ln"></span></div>
+    <p class="lead reveal" style="margin:-8px 0 26px">The flagship validation experiment (July 2026): the <b>same message, same pipeline, same 50 km link — run three times</b>, changing only where the node errors come from. Once on <b>real IBM hardware</b> (both endpoints executed on the <code>ibm_marrakesh</code> processor), once on the <b>digital twin</b>, and once on the <b>pure-equations model</b>. If the free models are good stand-ins for the real machine, all three runs should tell the same story — and they do.</p>
+
+    <div class="msg-flow reveal">
+      <div class="msg-card sent">
+        <div class="mh">Sent from node A · 149 characters → 1,192 bits</div>
+        <div class="mtext">"Quantum networks will link distant processors into one machine. This note crossed fifty kilometres of simulated fibre between two real quantum chips."</div>
+        <div class="mmeta">Each bit encoded as |0⟩ or |1⟩ and measured 256 times (256 "shots") — first on node A's real processor, then re-prepared after the fiber channel on node B's.</div>
+      </div>
+      <div class="msg-hop"><span class="hopline"></span><span class="hoptxt">encoded on the <b>real ibm_marrakesh QPU</b> (node A) → through the <b>50 km simulated fiber</b> → re-prepared &amp; measured on the <b>real QPU</b> (node B) → majority vote per bit</span></div>
+      <div class="msg-card recv">
+        <div class="mh">Decoded at node B — real IBM hardware <span class="msg-badge">✓ 0 of 149 characters wrong</span></div>
+        <div class="mtext">"Quantum networks will link distant processors into one machine. This note crossed fifty kilometres of simulated fibre between two real quantum chips."</div>
+        <div class="mmeta">The digital-twin and equations runs decoded the identical paragraph with zero character errors too. IBM job IDs <code style="font-size:11px">d98hqmsqp3as739svodg</code> · <code style="font-size:11px">d98hqv0tcv6s73dm5gkg</code>, 10 s of quantum time billed each.</div>
+      </div>
+    </div>
+
+    <div class="tbl-wrap reveal" style="margin-bottom:8px">
+      <table class="cal">
+        <thead>
+          <tr><th>Node-error source</th><th>Decoded message</th><th>Raw BER after node A</th><th>Raw BER end-to-end</th><th>Transmission fidelity</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="qpu">Real IBM hardware</td><td class="mono">perfect (149/149 chars)</td><td class="mono">0.81%</td><td class="mono">20.27%</td><td class="mono">0.797</td></tr>
+          <tr><td class="qpu">Digital twin</td><td class="mono">perfect (149/149 chars)</td><td class="mono">1.22%</td><td class="mono">20.99%</td><td class="mono">0.790</td></tr>
+          <tr><td class="qpu">Equations model</td><td class="mono">perfect (149/149 chars)</td><td class="mono">1.08%</td><td class="mono">20.84%</td><td class="mono">0.792</td></tr>
+        </tbody>
+        <caption>Raw BER = the fraction of the 256×1,192 individual shots that read back wrong (before majority voting). The free models land within 0.7 percentage points of the real machine end-to-end — and every mode still decodes the paragraph perfectly, because a ~20% per-shot error rate is comfortably corrected by majority vote over 256 shots.</caption>
+      </table>
+    </div>
+
+    <figure class="fig fig-wide reveal" style="margin:20px 0">
+      <img src="assets/exp_stage_ber.png" alt="Raw bit-error rate after each pipeline stage for hardware, twin, and equations" loading="lazy" />
+      <figcaption><b>Where the errors come from.</b> Raw per-shot bit-error rate after each stage of the pipeline. The node stages (real quantum processors) contribute ≈1% each; the 50 km fiber link dominates with ≈19%, identically in all three runs — so any difference between the bars is attributable purely to the node-error source. The twin and equations bars track the hardware bars closely at every stage.</figcaption>
+    </figure>
+    <div class="fig-grid" style="margin-bottom:20px">
+      <figure class="fig reveal">
+        <img src="assets/exp_fidelity.png" alt="Transmission fidelity per mode" loading="lazy" />
+        <figcaption><b>Transmission fidelity.</b> The fraction of shots that arrive correct, end-to-end: hardware 0.797, twin 0.790, equations 0.792 — three independent error sources, one consistent answer.</figcaption>
+      </figure>
+      <figure class="fig reveal">
+        <img src="assets/exp_error_asymmetry.png" alt="Sent-0 vs sent-1 error rates per mode" loading="lazy" />
+        <figcaption><b>Error asymmetry.</b> Real fiber loss affects |1⟩ far more than |0⟩ (a lost photon reads as 0), and real readout misreads |1⟩ more often. All three modes reproduce this strong sent-1 vs sent-0 asymmetry — the twin via its empirically fitted asymmetric readout matrix.</figcaption>
+      </figure>
+    </div>
+    <div class="fig-grid" style="margin-bottom:20px">
+      <figure class="fig reveal">
+        <img src="assets/exp_discrepancy.png" alt="Twin and equations discrepancy vs hardware per stage" loading="lazy" />
+        <figcaption><b>Model discrepancy vs the real machine.</b> Per-stage difference from hardware: both models stay within ≈1 percentage point at every stage. The residual gap comes from effects no average model captures — the transpiler placing circuits on the device's better-than-average qubits, and device drift between calibration and run time.</figcaption>
+      </figure>
+      <figure class="fig reveal">
+        <img src="assets/exp_per_bit_p1.png" alt="Per-bit P(1) at each stage across all 1192 bits" loading="lazy" />
+        <figcaption><b>All 1,192 bits, raw.</b> P(measured 1) for every single bit at each stage — dense by design, nothing filtered. After the link (bottom panel), sent-1 bits cluster at ≈0.68 and sent-0 bits at ≈0.05: both sides stay on the right side of the 0.5 majority-vote threshold, which is why the paragraph decodes perfectly despite the noise.</figcaption>
+      </figure>
+    </div>
+    <p class="taxo-note reveal" style="margin-bottom:46px">Full methodology, control variables, and per-stage analysis: <a href="assets/exp_report.pdf" style="color:var(--brand);font-weight:600" target="_blank" rel="noopener">download the 9-page experiment report (PDF)</a>. Raw per-shot records for all three runs are persisted in the simulator's data store.</p>
+
+    <!-- Channel & calibration graphs -->
+    <div class="subhead reveal"><span class="lbl">Results</span><h3>Channel physics &amp; hardware calibration</h3><span class="ln"></span></div>
     <figure class="fig fig-wide reveal" style="margin-bottom:20px">
       <img src="assets/sim_channel.png" alt="Fiber transmission and channel error probabilities vs distance" loading="lazy" />
-      <figcaption><b>Channel physics.</b> Photon transmission decays exponentially with fiber length (≈10% at 50 km, ≈1% at 100 km), while the effective amplitude-damping, polarization-drift, and phase-noise error probabilities grow and saturate with distance.</figcaption>
+      <figcaption><b>Channel physics.</b> Photon transmission decays exponentially with fiber length (10% at 50 km, 1% at 100 km), while the effective amplitude-damping, polarization-drift, and phase-noise error probabilities grow and saturate with distance — exactly the closed-form equations above, plotted.</figcaption>
     </figure>
     <div class="fig-grid">
       <figure class="fig reveal">
         <img src="assets/sim_fidelity_qber.png" alt="Bell-state fidelity and BB84 QBER vs distance" loading="lazy" />
-        <figcaption><b>Protocol performance (real Aer runs).</b> Bell-state fidelity for entanglement distribution (8,192 shots) and BB84 QBER across an 11-point distance sweep. A secure key is only obtained while QBER stays below the 11% threshold — here up to ≈10 km under the default noise budget.</figcaption>
+        <figcaption><b>Protocol performance (real Aer runs).</b> Bell-state fidelity for entanglement distribution (8,192 shots) and BB84 QBER across an 11-point distance sweep. A secure key is only obtained while QBER stays below the 11% threshold — crossed between ≈15–20 km under the default noise budget.</figcaption>
       </figure>
       <figure class="fig reveal">
         <img src="assets/sim_calibration.png" alt="IBM hardware calibration: coherence and error rates" loading="lazy" />
-        <figcaption><b>Real hardware calibration.</b> Coherence times (T₁/T₂) and gate/readout error rates captured from three IBM Heron-class QPUs and used to drive the IBM-calibrated node mode.</figcaption>
+        <figcaption><b>Real hardware calibration.</b> Coherence times (T₁/T₂) and gate/readout error rates from the latest live snapshots of three IBM Heron-class QPUs — the data that drives the digital-twin node mode.</figcaption>
       </figure>
     </div>
 
@@ -656,14 +762,14 @@
     <div class="tbl-wrap reveal">
       <table class="cal">
         <thead>
-          <tr><th>Backend</th><th>Qubits</th><th>T₁ (µs)</th><th>T₂ (µs)</th><th>1-qubit err</th><th>2-qubit (CX) err</th><th>Readout err</th></tr>
+          <tr><th>Backend</th><th>Qubits</th><th>T₁ <span style="text-transform:none">(µs)</span></th><th>T₂ <span style="text-transform:none">(µs)</span></th><th>1-qubit err</th><th>2-qubit (CX) err</th><th>Readout err</th></tr>
         </thead>
         <tbody>
-          <tr><td class="qpu">ibm_fez</td><td class="mono">156</td><td class="mono">145.4</td><td class="mono">104.9</td><td class="mono">1.32%</td><td class="mono">1.00%</td><td class="mono">2.23%</td></tr>
-          <tr><td class="qpu">ibm_kingston</td><td class="mono">156</td><td class="mono">246.0</td><td class="mono">165.9</td><td class="mono">2.61%</td><td class="mono">1.00%</td><td class="mono">1.65%</td></tr>
-          <tr><td class="qpu">ibm_marrakesh</td><td class="mono">156</td><td class="mono">190.8</td><td class="mono">119.0</td><td class="mono">2.61%</td><td class="mono">1.00%</td><td class="mono">3.12%</td></tr>
+          <tr><td class="qpu">ibm_fez</td><td class="mono">156</td><td class="mono">134.5</td><td class="mono">103.5</td><td class="mono">0.031%</td><td class="mono">0.28%</td><td class="mono">0.78%</td></tr>
+          <tr><td class="qpu">ibm_kingston</td><td class="mono">156</td><td class="mono">244.2</td><td class="mono">158.7</td><td class="mono">0.024%</td><td class="mono">0.19%</td><td class="mono">0.78%</td></tr>
+          <tr><td class="qpu">ibm_marrakesh</td><td class="mono">156</td><td class="mono">176.2</td><td class="mono">109.8</td><td class="mono">0.035%</td><td class="mono">0.27%</td><td class="mono">1.06%</td></tr>
         </tbody>
-        <caption>Most-recent live-hardware snapshot per backend, from 91 calibration snapshots and 94 fitted noise models (mean fit quality 0.98) in the local SQLite store.</caption>
+        <caption>Most-recent live-hardware snapshot per backend (July 2026), from 296 calibration snapshots and 313 fitted noise models in the local SQLite store. Errors are per-gate / per-readout probabilities in percent.</caption>
       </table>
     </div>
   </div>
@@ -689,9 +795,9 @@
     <div class="data-split-label sim reveal"><span>Quantum simulator</span><span class="ln"></span></div>
     <div class="data-grid">
       <div class="card data-card sim reveal"><div class="top"><span class="tg">Hardware</span></div><div class="big" data-count="3">0</div><div class="desc">real IBM superconducting QPUs</div></div>
-      <div class="card data-card sim reveal"><div class="top"><span class="tg">Calibration</span></div><div class="big" data-count="91">0</div><div class="desc">live calibration snapshots</div></div>
-      <div class="card data-card sim reveal"><div class="top"><span class="tg">Models</span></div><div class="big" data-count="94">0</div><div class="desc">fitted noise models</div></div>
-      <div class="card data-card sim reveal"><div class="top"><span class="tg">Error types</span></div><div class="big" data-count="7">0</div><div class="desc">custom channel error models</div></div>
+      <div class="card data-card sim reveal"><div class="top"><span class="tg">Calibration</span></div><div class="big" data-count="296">0</div><div class="desc">live calibration snapshots</div></div>
+      <div class="card data-card sim reveal"><div class="top"><span class="tg">Models</span></div><div class="big" data-count="313">0</div><div class="desc">fitted noise models</div></div>
+      <div class="card data-card sim reveal"><div class="top"><span class="tg">Error types</span></div><div class="big" data-count="12">0</div><div class="desc">built-in error channels (8 link + 4 node) + custom</div></div>
     </div>
     <p class="map-note" style="margin-top:26px">Stored in a local ChromaDB vector store (mining) and a SQLite data store (simulator). Snapshot from the development environment.</p>
   </div>
