@@ -682,9 +682,9 @@
       </div>
     </div>
 
-    <!-- Flagship experiment: three-mode comparison -->
-    <div class="subhead reveal"><span class="lbl">Results</span><h3>Simulation results — real hardware vs digital twin vs equations</h3><span class="ln"></span></div>
-    <p class="lead reveal" style="margin:-8px 0 26px">The flagship validation experiment (July 2026): the <b>same message, same pipeline, same 50 km link — run three times</b>, changing only where the node errors come from. Once on <b>real IBM hardware</b> (both endpoints executed on the <code>ibm_marrakesh</code> processor), once on the <b>digital twin</b>, and once on the <b>pure-equations model</b>. If the free models are good stand-ins for the real machine, all three runs should tell the same story — and they do.</p>
+    <!-- Experiment: three-mode comparison -->
+    <div class="subhead reveal"><span class="lbl">Results</span><h3>Experiment — real hardware vs digital twin vs equations</h3><span class="ln"></span></div>
+    <p class="lead reveal" style="margin:-8px 0 26px">The validation experiment (July 2026): the <b>same message, same pipeline, same 50 km link — run three times</b>, changing only where the node errors come from. Once on <b>real IBM hardware</b> (both endpoints executed on the <code>ibm_marrakesh</code> processor), once on the <b>digital twin</b>, and once on the <b>pure-equations model</b>. If the free models are good stand-ins for the real machine, all three runs should tell the same story — and they do.</p>
 
     <div class="msg-flow reveal">
       <div class="msg-card sent">
@@ -741,7 +741,8 @@
     <p class="taxo-note reveal" style="margin-bottom:46px">Full methodology, control variables, and per-stage analysis: <a href="assets/exp_report.pdf" style="color:var(--brand);font-weight:600" target="_blank" rel="noopener">download the 9-page experiment report (PDF)</a>. Raw per-shot records for all three runs are persisted in the simulator's data store.</p>
 
     <!-- Channel & calibration graphs -->
-    <div class="subhead reveal"><span class="lbl">Results</span><h3>Channel physics &amp; hardware calibration</h3><span class="ln"></span></div>
+    <div class="subhead reveal"><span class="lbl">Model &amp; data</span><h3>Behind the model — channel curves &amp; hardware calibration</h3><span class="ln"></span></div>
+    <p class="lead reveal" style="margin:-8px 0 26px">Not an experiment — the supporting material behind the simulator: the channel equations plotted against distance, a local Aer protocol sweep, and the measured calibration data that drives the digital twin.</p>
     <figure class="fig fig-wide reveal" style="margin-bottom:20px">
       <img src="assets/sim_channel.png" alt="Fiber transmission and channel error probabilities vs distance" loading="lazy" />
       <figcaption><b>Channel physics.</b> Photon transmission decays exponentially with fiber length (10% at 50 km, 1% at 100 km), while the effective amplitude-damping, polarization-drift, and phase-noise error probabilities grow and saturate with distance — exactly the closed-form equations above, plotted.</figcaption>
@@ -749,7 +750,7 @@
     <div class="fig-grid">
       <figure class="fig reveal">
         <img src="assets/sim_fidelity_qber.png" alt="Bell-state fidelity and BB84 QBER vs distance" loading="lazy" />
-        <figcaption><b>Protocol performance (real Aer runs).</b> Bell-state fidelity for entanglement distribution (8,192 shots) and BB84 QBER across an 11-point distance sweep. A secure key is only obtained while QBER stays below the 11% threshold — crossed between ≈15–20 km under the default noise budget.</figcaption>
+        <figcaption><b>Protocol performance (local Aer runs, July 2026).</b> Bell-state fidelity for entanglement distribution (8,192 shots per point) and BB84 QBER estimated from the four equally likely sifted cases (32,768 shots each) across an 11-point distance sweep. A secure key is only obtained while QBER stays below the 11% threshold — crossed at ≈17 km under the default noise budget. <a href="assets/sim_fidelity_qber_data.json" style="color:var(--brand)" target="_blank" rel="noopener">Raw data + method</a>.</figcaption>
       </figure>
       <figure class="fig reveal">
         <img src="assets/sim_calibration.png" alt="IBM hardware calibration: coherence and error rates" loading="lazy" />
