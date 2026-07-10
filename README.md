@@ -19,6 +19,8 @@ contains **only** the static marketing site, published via GitHub Pages.
 ```
 .
 ├── index.html                # Single-file landing page (self-contained CSS/JS)
+├── assets/logo.svg           # Project logo (also the favicon)
+├── assets/ttu.svg            # Texas Tech University Double T
 ├── assets/architecture.png   # QuantumPaperMiner system architecture diagram
 ├── assets/sim_*.png          # Simulator diagrams & result charts
 ├── assets/exp_*.png|pdf      # Three-mode hardware-vs-twin-vs-equations experiment
