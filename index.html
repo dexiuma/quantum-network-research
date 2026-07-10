@@ -596,46 +596,61 @@
       </table>
     </div>
 
+    <div class="tbl-wrap reveal" style="margin-bottom:22px">
+      <table class="cal">
+        <thead><tr><th>Notation</th><th style="text-align:left">How to read it</th></tr></thead>
+        <tbody>
+          <tr><td class="qpu">ρ</td><td style="text-align:left">The qubit's quantum state (density matrix) entering the channel</td></tr>
+          <tr><td class="qpu">ℰ(ρ)</td><td style="text-align:left">The error channel: the state that comes out after the error acts on ρ</td></tr>
+          <tr><td class="qpu">X, Y, Z</td><td style="text-align:left">Pauli operators — X flips the bit, Z flips the phase, Y does both; "XρX" means that error applied to the state</td></tr>
+          <tr><td class="qpu">K₀, K₁</td><td style="text-align:left">Kraus operators — the channel's two branches: K₀ ≈ "nothing happened", K₁ = "the error happened", weighted so probabilities sum to 1</td></tr>
+          <tr><td class="qpu">min(c, x)</td><td style="text-align:left">Clamp: the derived probability x saturates at the physical cap c instead of growing without bound</td></tr>
+          <tr><td class="qpu">∘</td><td style="text-align:left">Channel composition — apply one channel after another, rightmost first</td></tr>
+        </tbody>
+        <caption>Shared notation used in all the equation cards below. Each card's own derived quantities are defined in its caption.</caption>
+      </table>
+    </div>
+
     <div class="eq-grid">
       <div class="eq-card reveal">
         <div class="eq-t"><span class="dot" style="background:var(--c-mine)"></span>1 · Fiber attenuation → amplitude damping</div>
         <div class="eq-math">$$T=10^{-\alpha L/10},\qquad p_\text{loss}=1-T\,\eta_d$$ $$\gamma_\text{eff}=\min\!\left(0.5,\ 0.3\sqrt{p_\text{loss}}\right)$$ $$K_0=\begin{pmatrix}1&0\\[2pt]0&\sqrt{1-\gamma_\text{eff}}\end{pmatrix},\ K_1=\begin{pmatrix}0&\sqrt{\gamma_\text{eff}}\\[2pt]0&0\end{pmatrix}$$</div>
-        <div class="eq-d">Beer–Lambert survival through single-mode fiber. Photon loss in a real network is <em>heralded</em> (a lost photon is a missed detection, not a wrong bit), so an <em>effective</em> amplitude-damping channel with Kraus operators K₀, K₁ is applied to the qubits that do arrive.</div>
+        <div class="eq-d">Beer–Lambert survival through single-mode fiber. Photon loss in a real network is <em>heralded</em> (a lost photon is a missed detection, not a wrong bit), so an <em>effective</em> amplitude-damping channel is applied to the qubits that do arrive.<br><b style="color:var(--text)">Symbols:</b> <code>T</code> — fraction of photons that survive the fiber · <code>p_loss</code> — probability a photon is never detected (fiber loss and detector inefficiency combined) · <code>γ_eff</code> — the resulting damping strength: the probability an arrived |1⟩ decays toward |0⟩.</div>
       </div>
       <div class="eq-card reveal">
         <div class="eq-t"><span class="dot" style="background:var(--c-survey)"></span>2 · Polarization drift → Pauli channel</div>
         <div class="eq-math">$$p_\text{pol}=\min\!\left(0.5,\ r\,L\right)$$ $$\mathcal{E}(\rho)=(1-p_\text{pol})\,\rho+\frac{p_\text{pol}}{3}\big(X\rho X+Y\rho Y+Z\rho Z\big)$$</div>
-        <div class="eq-d">Stress-induced birefringence rotates polarization as the photon travels, modeled as symmetric Pauli noise (equal X, Y, Z probability) growing linearly with distance and clamped at ½ (fully mixed).</div>
+        <div class="eq-d">Stress-induced birefringence rotates polarization as the photon travels, modeled as symmetric Pauli noise (equal X, Y, Z probability) growing linearly with distance and clamped at ½ (fully mixed).<br><b style="color:var(--text)">Symbols:</b> <code>p_pol</code> — probability the polarization has drifted by the time the photon arrives; each of the three Pauli errors gets p_pol/3 of it.</div>
       </div>
       <div class="eq-card reveal">
         <div class="eq-t"><span class="dot" style="background:var(--brand-2)"></span>3 · Phase noise → phase damping</div>
         <div class="eq-math">$$\lambda=\min\!\left(0.3,\ 10^{-6}\,T_K\,L\right)$$ $$K_0=\begin{pmatrix}1&0\\[2pt]0&\sqrt{1-\lambda}\end{pmatrix},\ K_1=\begin{pmatrix}0&0\\[2pt]0&\sqrt{\lambda}\end{pmatrix}$$</div>
-        <div class="eq-d">Path-length and thermal fluctuations destroy phase coherence without flipping the bit value — growing with both temperature and distance.</div>
+        <div class="eq-d">Path-length and thermal fluctuations destroy phase coherence without flipping the bit value — growing with both temperature and distance.<br><b style="color:var(--text)">Symbols:</b> <code>λ</code> — the phase-damping strength: the probability the qubit's phase information is lost in transit (capped at 0.3).</div>
       </div>
       <div class="eq-card reveal">
         <div class="eq-t"><span class="dot" style="background:var(--c-sim)"></span>4 · Timing jitter → dephasing</div>
         <div class="eq-math">$$p_Z=\min\!\left(0.2,\ 10^{-5}\,j\right)$$ $$\mathcal{E}(\rho)=(1-p_Z)\,\rho+p_Z\,Z\rho Z$$</div>
-        <div class="eq-d">Uncertainty in <em>when</em> the photon is detected translates into pure dephasing. Depends on the detector's jitter <code>j</code>, not on distance.</div>
+        <div class="eq-d">Uncertainty in <em>when</em> the photon is detected translates into pure dephasing. Depends on the detector's jitter <code>j</code> (in ns), not on distance.<br><b style="color:var(--text)">Symbols:</b> <code>p_Z</code> — probability of a phase flip (a Z error) caused by the timing uncertainty (capped at 0.2).</div>
       </div>
       <div class="eq-card reveal">
         <div class="eq-t"><span class="dot" style="background:#f472b6"></span>5 · Detector dark counts → bit flip</div>
         <div class="eq-math">$$\mathcal{E}(\rho)=(1-p_\text{dark})\,\rho+p_\text{dark}\,X\rho X$$</div>
-        <div class="eq-d">A thermal false click registers the wrong outcome — a bit-flip channel with the detector's dark-count probability, independent of distance.</div>
+        <div class="eq-d">A thermal false click registers the wrong outcome — a bit-flip channel with the detector's dark-count probability, independent of distance.<br><b style="color:var(--text)">Symbols:</b> <code>p_dark</code> — probability of a false detection per measurement window (from the parameter table; no clamp — it is already tiny).</div>
       </div>
       <div class="eq-card reveal">
         <div class="eq-t"><span class="dot" style="background:var(--c-survey)"></span>6 · Environmental decoherence → thermal relaxation</div>
         <div class="eq-math">$$\tau=\tfrac{T_K}{300},\quad T_1=\tfrac{100\,\mu s}{\tau},\quad T_2=\min\!\left(\tfrac{50\,\mu s}{\tau},\,2T_1\right)$$ $$t_\text{transit}=50\,\text{ns/km}\times L$$</div>
-        <div class="eq-d">Base coherence times degraded by temperature, applied over a transit time that grows with distance (including buffering overhead) via Qiskit's <code>thermal_relaxation_error(T₁, T₂, t)</code>.</div>
+        <div class="eq-d">Base coherence times degraded by temperature, applied over a transit time that grows with distance (including buffering overhead) via Qiskit's <code>thermal_relaxation_error(T₁, T₂, t)</code>.<br><b style="color:var(--text)">Symbols:</b> <code>τ</code> — temperature scale factor relative to 300 K room temperature · <code>T₁</code> — energy-relaxation time (how long |1⟩ survives) · <code>T₂</code> — dephasing time (how long phase survives; physically T₂ ≤ 2T₁) · <code>t_transit</code> — how long the qubit spends in the channel.</div>
       </div>
       <div class="eq-card reveal">
         <div class="eq-t"><span class="dot" style="background:var(--brand-2)"></span>7 · Chromatic dispersion → dephasing</div>
         <div class="eq-math">$$\Delta\tau=D\,\Delta\lambda\,L,\qquad p_\text{disp}=\min\!\left(0.3,\ \left(\tfrac{\Delta\tau}{w}\right)^{2}\right)$$</div>
-        <div class="eq-d">Different wavelengths travel at different speeds, broadening the pulse by Δτ relative to the ≈1 ns detector coherence window <code>w</code>. Dispersion coefficient <code>D = 17 ps/(nm·km)</code>, source linewidth <code>Δλ = 0.1 nm</code>.</div>
+        <div class="eq-d">Different wavelengths travel at different speeds, broadening the pulse in time; the broadening relative to the detector's timing window is what dephases the qubit.<br><b style="color:var(--text)">Symbols:</b> <code>Δτ</code> — pulse broadening in ps · <code>D = 17 ps/(nm·km)</code> — dispersion coefficient of standard SMF-28 fiber · <code>Δλ = 0.1 nm</code> — spectral linewidth of the photon source · <code>w ≈ 1 ns</code> — detector coherence/timing window · <code>p_disp</code> — resulting phase-flip probability (capped at 0.3).</div>
       </div>
       <div class="eq-card reveal">
         <div class="eq-t"><span class="dot" style="background:var(--c-mine)"></span>Composition — one channel per hop</div>
         <div class="eq-math">$$\mathcal{E}_\text{link}=\mathcal{E}_7\circ\mathcal{E}_6\circ\cdots\circ\mathcal{E}_1$$ $$\mathcal{E}_\text{path}=\mathcal{E}_\text{hop}^{(N-1)}\circ\cdots\circ\mathcal{E}_\text{hop}^{(1)}$$</div>
-        <div class="eq-d">All seven channels are composed in sequence into one CPTP transmission error per link, bound to the <code>id</code> gate (the simulator's convention for "in transit"). Multi-hop paths compose one such error per hop.</div>
+        <div class="eq-d">All seven channels are composed in sequence into one CPTP transmission error per link, bound to the <code>id</code> gate (the simulator's convention for "in transit"). Multi-hop paths compose one such error per hop.<br><b style="color:var(--text)">Symbols:</b> <code>ℰ₁…ℰ₇</code> — the seven channels above, applied in numbered order (rightmost first) · <code>ℰ_link</code> — the whole link's combined channel · <code>ℰ_hop⁽ⁱ⁾</code> — the combined channel of the i-th link on a routed path · <code>N</code> — number of nodes on the path (N−1 hops) · CPTP — "completely positive, trace-preserving": a mathematically valid quantum channel.</div>
       </div>
     </div>
     <p class="taxo-note reveal" style="margin-top:18px"><b style="color:var(--text)">Assumptions &amp; limits.</b> Derived probabilities are clamped to physically sensible saturation values (shown as <code>min(·)</code> above). Photon loss is treated as heralded, so attenuation acts as an effective damping on received qubits rather than as erasure. The 90% detector efficiency gives every link a ~10% amplitude-damping floor even at 0 km, and the reported Bell fidelity is the Z-basis correlation P(00)+P(11) — a phase-insensitive upper bound on true state fidelity. At the default 50 km these expressions give transmission T = 0.100, photon loss 0.910, polarization error 0.100, and phase noise 0.015 — the channel is dominated by attenuation, as expected physically.</p>
